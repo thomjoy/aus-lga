@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>USGS</title>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+    <link rel='stylesheet' href='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' />
+    <link rel='stylesheet' href='style.css' />
+
+    <script src='//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
+    <script src='//code.jquery.com/jquery-2.0.3.min.js'></script>
+</head>
+<body>
+    <div id='header'></div>
+    <div id='map'></div>
+    <script>
+	var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png'
+	    cloudmadeAttribution = 'Map data &copy; 2013 OpenStreetMap contributors, Imagery &copy; 2013 CloudMade',
+	    cloudmade = L.tileLayer(cloudmadeUrl, { maxZoom: 18, attribution: cloudmadeAttribution }),
+	    map = L.map('map', {zoom: 6, layers: [cloudmade]});
+	    def = $.getJSON('AUS_LGA.json');
+
+	$.when( def ).done( function( geoJSON ) {
+	    //var geoJSONLayer = L.geoJson(geoJSON);
+
+	    var myStyle = {
+		"color": "#ff7800",
+		"weight": 0.75,
+		"opacity": 0.65
+	    };
+
+	    L.geoJson(geoJSON, {
+		style: myStyle,
+		onEachFeature: function(feature, layer) {
+		    layer.on('click', function() {
+			var p = feature.properties;
+			console.log(p.LGA_CODE11 + ' ' + p.LGA_NAME11 + ' ' + p.STATE_CODE);
+		    });
+		}
+	    }).addTo(map);
+
+	    $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
+	    map.setView([-33.8600, 151.2111], 3);
+	});
+    </script>
+</body>
+</html>
