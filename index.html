@@ -12,7 +12,6 @@
     <script src='//code.jquery.com/jquery-2.0.3.min.js'></script>
 </head>
 <body>
-    <div id='header'></div>
     <div id='map'></div>
 
     <script>
@@ -27,9 +26,15 @@
           geoData = $.getJSON('AUS_LGA.json'),
           nswData = $.getJSON('nsw.json'),
           vicData = $.getJSON('vic.json'),
-          qldData = $.getJSON('qld.json');
+          qldData = $.getJSON('qld.json'),
+          saData = $.getJSON('sa.json'),
+          waData = $.getJSON('wa.json'),
+          tasData = $.getJSON('tas.json'),
+          ntData = $.getJSON('nt.json'),
+          stateData = $.getJSON('states.json');
 
-      $.when( geoData, nswData, vicData, qldData ).done( function( geoJSON, nswJSON, vicJSON, qldJSON ) {
+      $.when( geoData, nswData, vicData, qldData, saData, waData, tasData, ntData, stateData )
+      .done( function( geoJSON, nswJSON, vicJSON, qldJSON, saJSON, waJSON, tasJSON, ntJSON, stateJSON ) {
         
         // horrible
         nswJSON[0].forEach(function(l) { 
@@ -49,6 +54,38 @@
         });
 
         qldJSON[0].forEach(function(l) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        saJSON[0].forEach(function(l) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        waJSON[0].forEach(function(l) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        tasJSON[0].forEach(function(l) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        ntJSON[0].forEach(function(l) {
           geoJSON[0].features.forEach(function(g) {
             if( g.properties.LGA_CODE11 == l.id ) {
               g.properties.data = l;
@@ -81,6 +118,17 @@
           };
         }
 
+        L.geoJson(stateJSON[0], {
+          style: {
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            color: '#666',
+            opacity: 1,
+            width: 0.5,
+            weight: 0.5
+          }
+        }).addTo(map);
+
         L.geoJson(geoJSON[0], {
           style: styleFeature,
           onEachFeature: function(feature, layer) {
@@ -102,6 +150,8 @@
           }
         }).addTo(map);
 
+
+
         var info = L.control();
         info.onAdd = function (map) {
             this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
@@ -122,7 +172,7 @@
 
         info.addTo(map);
 
-        //$('#map').css('height', function() { return document.body.clientHeight || '800px'; });
+        $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
         map.setView([-33.8600, 151.2111], 6);
       });
     </script>

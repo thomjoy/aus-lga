@@ -2,8 +2,8 @@ import csv
 from itertools import izip
 import json
 
-f = open( 'qld.csv', 'r' )
-jsonOut = open ('qld.json', 'w+')
+f = open( 'nt.csv', 'r' )
+jsonOut = open ('nt.json', 'w+')
 
 reader = csv.reader( f )
 keys = ( "id", "name", "2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","change % (2007-2012)","change no.","area","density" )
