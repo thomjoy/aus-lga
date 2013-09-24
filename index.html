@@ -25,12 +25,30 @@
             }),
           map = L.map('map', {zoom: 6, layers: [cloudmade]});
           geoData = $.getJSON('AUS_LGA.json'),
-          lgaData = $.getJSON('nsw.json');
+          nswData = $.getJSON('nsw.json'),
+          vicData = $.getJSON('vic.json'),
+          qldData = $.getJSON('qld.json');
 
-      $.when( geoData, lgaData ).done( function( geoJSON, lgaJSON ) {
+      $.when( geoData, nswData, vicData, qldData ).done( function( geoJSON, nswJSON, vicJSON, qldJSON ) {
         
         // horrible
-        lgaJSON[0].forEach(function(l) { 
+        nswJSON[0].forEach(function(l) { 
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        vicJSON[0].forEach(function(l) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == l.id ) {
+              g.properties.data = l;
+            }
+          });
+        });
+
+        qldJSON[0].forEach(function(l) {
           geoJSON[0].features.forEach(function(g) {
             if( g.properties.LGA_CODE11 == l.id ) {
               g.properties.data = l;
@@ -50,13 +68,9 @@
         }
 
         function styleFeature(feature) {
-          var density;
-          if( feature.properties.data && feature.properties.data.density ) {
-            density = feature.properties.data.density;
-          }
-          else {
-            density = 0;
-          }
+          var density = feature.properties.data && feature.properties.data.density ? 
+                feature.properties.data.density : 0;
+
           return {
               fillColor: getColor(density),
               weight: 1,
@@ -73,9 +87,6 @@
 
             layer.on({
               click: function() {
-                var p = feature.properties;
-                console.log(feature.properties.data);
-
                 layer.setStyle({
                   color: '#fff',
                   opacity: 1,
@@ -83,8 +94,8 @@
                   fillOpacity: 1
                 });
               },
-              mouseover: function(e) {
-                var feature = e.layer && e.layer.feature;
+              mouseover: function(evt) {
+                var feature = evt.layer && e.layer.feature;
                 info.update(layer.feature.properties.data);
               },
             });
@@ -102,10 +113,10 @@
         info.update = function (props) {
             this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
                 (props ? 
-                  '<p>' + props.area + 'km<sup>2</sup></p>' +
-                  '<p>' + props['2012'] + '</p>' +
-                  '<p>' + props.name + '</p>' + 
-                  '<p>' + props.density + ' people per km<sup>2</sup></p>'
+                  '<p>Name: <strong>' + props.name + '</strong></p>' + 
+                  '<p>Area: <strong>' + props.area + 'km<sup>2</sup></strong></p>' +
+                  '<p>Population: <strong>' + props['2012'] + '</strong></p>' +
+                  '<p>Population density: <strong>' + props.density + ' people per km<sup>2</sup></strong></p>'
                 : '<p>Hover over an LGA</p>');
         };
 
