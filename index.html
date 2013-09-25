@@ -122,7 +122,7 @@
           style: {
             fillColor: 'transparent',
             fillOpacity: 0,
-            color: '#666',
+            color: '#999',
             opacity: 1,
             width: 0.5,
             weight: 0.5
@@ -154,23 +154,37 @@
 
         var info = L.control();
         info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-            this.update();
-            return this._div;
+          this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+          this.update();
+          return this._div;
         };
 
         // method that we will use to update the control based on feature properties passed
         info.update = function (props) {
-            this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
-                (props ? 
-                  '<p>Name: <strong>' + props.name + '</strong></p>' + 
-                  '<p>Area: <strong>' + props.area + 'km<sup>2</sup></strong></p>' +
-                  '<p>Population: <strong>' + props['2012'] + '</strong></p>' +
-                  '<p>Population density: <strong>' + props.density + ' people per km<sup>2</sup></strong></p>'
-                : '<p>Hover over an LGA</p>');
+          this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
+              (props ? 
+                '<p>Name: <strong>' + props.name + '</strong></p>' + 
+                '<p>Area: <strong>' + props.area + 'km<sup>2</sup></strong></p>' +
+                '<p>Population: <strong>' + props['2012'] + '</strong></p>' +
+                '<p>Population density: <strong>' + props.density + ' people per km<sup>2</sup></strong></p>'
+              : '<p>Hover over an LGA</p>');
         };
 
         info.addTo(map);
+
+        var search = L.control();
+        search.onAdd = function(map) {
+          this._div = L.DomUtil.create('div', 'search');
+          this.update();
+          return this._div;
+        };
+
+        search.update = function(properties) {
+          this._div.innerHTML = '<h4>Search</h4>' + 
+            '<input type="search" value="" placeholder="search" class="topcoat-search-input--large">';
+        };
+
+        search.addTo(map);
 
         $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
         map.setView([-33.8600, 151.2111], 6);
