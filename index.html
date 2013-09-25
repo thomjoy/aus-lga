@@ -156,6 +156,9 @@
                 var feature = evt.layer && evt.layer.feature;
                 info.update(layer.feature.properties);
               },
+              mouseout: function(evt) {
+                info.update();
+              }
             });
           }
         }).addTo(map);
