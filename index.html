@@ -10,6 +10,7 @@
 
     <script src='//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
     <script src='//code.jquery.com/jquery-2.0.3.min.js'></script>
+    <script src='//bower_components/d3/d3.js'></script>
 </head>
 <body>
     <div id='map'></div>
@@ -159,6 +160,9 @@
 
         // method that we will use to update the control based on feature properties passed
         info.update = function (props) {
+
+
+
           this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
               (props ? 
                 '<p>Name: <strong>' + props.name + '</strong></p>' + 
@@ -202,12 +206,6 @@
 
         $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
         map.setView([-33.8600, 151.2111], 6);
-      });
-
-      $(document).on('ready', function() {
-        $('#search').on('click', function(e) {
-          console.log(e);
-        });
       });
     </script>
 </body>
