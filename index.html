@@ -22,7 +22,7 @@
             attribution: cloudmadeAttribution, 
             styleId: 22677
             }),
-          map = L.map('map', {zoom: 6, layers: [cloudmade]});
+          map = L.map('map', {zoom: 6, layers: [cloudmade]}),
           geoData = $.getJSON('AUS_LGA.json'),
           nswData = $.getJSON('nsw.json'),
           vicData = $.getJSON('vic.json'),
@@ -143,14 +143,12 @@
                 });
               },
               mouseover: function(evt) {
-                var feature = evt.layer && e.layer.feature;
+                var feature = evt.layer && evt.layer.feature;
                 info.update(layer.feature.properties.data);
               },
             });
           }
         }).addTo(map);
-
-
 
         var info = L.control();
         info.onAdd = function (map) {
@@ -181,13 +179,35 @@
 
         search.update = function(properties) {
           this._div.innerHTML = '<h4>Search</h4>' + 
-            '<input type="search" value="" placeholder="search" class="topcoat-search-input--large">';
+            '<input id="search" type="search" value="" placeholder="search" class="topcoat-search-input--large">';
         };
 
         search.addTo(map);
 
+        var legend = L.control();
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+                labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+            return div;
+        };
+        legend.addTo(map);
+
         $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
         map.setView([-33.8600, 151.2111], 6);
+      });
+
+      $(document).on('ready', function() {
+        $('#search').on('click', function(e) {
+          console.log(e);
+        });
       });
     </script>
 </body>
