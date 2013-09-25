@@ -115,7 +115,7 @@
               opacity: 0.7,
               color: '#999',
               dashArray: '3',
-              fillOpacity: 0.7
+              fillOpacity: 0.8 //0.7
           };
         }
 
@@ -190,6 +190,12 @@
               .tickSize(3)
               .tickValues(y.domain());
 
+          var area = d3.svg.area()
+              .interpolate("monotone")
+              .x(function(d) { return x(d.year); })
+              .y0(height)
+              .y1(function(d) { return y(d.pop); });
+
           var valueline = d3.svg.line()
               .x(function(d) { return x(d.year); }) 
               .y(function(d) { return y(d.pop); });
@@ -200,6 +206,21 @@
               .attr("height", height + margin.top + margin.bottom)
               .append("g")
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          // Add the clip path.
+          svg.append("clipPath")
+              .attr("id", "clip")
+            .append("rect")
+              .attr("width", width)
+              .attr("height", height);
+
+          // Add the area path.
+          // http://bl.ocks.org/mbostock/1166403
+          /*svg.append("path")
+              .attr("class", "area")
+              .attr("clip-path", "url(#clip)")
+              .attr("d", area(data));
+          */
 
           svg.append("path") // Add the valueline path.
               .attr("d", valueline(data));
