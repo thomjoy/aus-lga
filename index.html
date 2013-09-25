@@ -32,10 +32,11 @@
           waData = $.getJSON('wa.json'),
           tasData = $.getJSON('tas.json'),
           ntData = $.getJSON('nt.json'),
-          stateData = $.getJSON('states.json');
+          stateData = $.getJSON('states.json'),
+          seifaData = $.getJSON('lga_seifa.json');
 
-      $.when( geoData, nswData, vicData, qldData, saData, waData, tasData, ntData, stateData )
-      .done( function( geoJSON, nswJSON, vicJSON, qldJSON, saJSON, waJSON, tasJSON, ntJSON, stateJSON ) {
+      $.when( geoData, nswData, vicData, qldData, saData, waData, tasData, ntData, stateData, seifaData )
+      .done( function( geoJSON, nswJSON, vicJSON, qldJSON, saJSON, waJSON, tasJSON, ntJSON, stateJSON, seifaJSON ) {
         
         // horrible
         nswJSON[0].forEach(function(l) { 
@@ -94,6 +95,14 @@
           });
         });
 
+        seifaJSON[0].forEach(function(s) {
+          geoJSON[0].features.forEach(function(g) {
+            if( g.properties.LGA_CODE11 == s.lga_id ) {
+              g.properties.seifa = s;
+            }
+          });
+        });
+
         function getColor(d) {
           return d > 1000 ? '#800026' :
                  d > 500  ? '#BD0026' :
@@ -113,9 +122,9 @@
               fillColor: getColor(density),
               weight: 1,
               opacity: 0.7,
-              color: '#999',
+              color: '#888',
               dashArray: '3',
-              fillOpacity: 0.8 //0.7
+              fillOpacity: 0.7
           };
         }
 
@@ -145,7 +154,7 @@
               },
               mouseover: function(evt) {
                 var feature = evt.layer && evt.layer.feature;
-                info.update(layer.feature.properties.data);
+                info.update(layer.feature.properties);
               },
             });
           }
@@ -154,7 +163,6 @@
         var info = L.control();
         info.onAdd = function (map) {
           this._div = L.DomUtil.create('div', 'info');
-          this._graph = L.DomUtil.create('div', 'graph')
           this.update();
           return this._div;
         };
@@ -165,7 +173,7 @@
 
           var margin = {top: 30, right: 45, bottom: 30, left: 45}, 
               width = 280 - margin.left - margin.right,
-              height = 280 - margin.top - margin.bottom;
+              height = 180 - margin.top - margin.bottom;
 
           // convert to a timestamp so we can use a time scale
           data.forEach(function(d) {
@@ -237,14 +245,17 @@
           return svg;
         };
 
+        var formatter = d3.format("0,000");
+
         // method that we will use to update the control based on feature properties passed
         info.update = function(props) {
+
           this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
               (props ? 
-                '<p>Name: <strong>' + props.name + '</strong></p>' + 
-                '<p>Area: <strong>' + props.area + 'km<sup>2</sup></strong></p>' +
-                '<p>Population: <strong>' + props['2012'] + '</strong></p>' +
-                '<p>Population density: <strong>' + props.density + ' people per km<sup>2</sup></strong></p>' +
+                '<p>Name: <strong>' + props.data.name + '</strong></p>' + 
+                '<p>Area: <strong>' + formatter(props.data.area) + 'km<sup>2</sup></strong></p>' +
+                '<p>Population (2012): <strong>' + formatter(props.data['2012']) + '</strong></p>' +
+                '<p>Population density: <strong>' + props.data.density + ' people per km<sup>2</sup></strong></p>' +
                 '<div class="graph"></div>'
               : '<p>Hover over an LGA</p>');
 
@@ -258,9 +269,10 @@
                   }
                 }
                 return d;
-              })(props);
+              })(props.data);
             
             buildGraph({data: graphData, el: 'graph'});
+            console.log(props.seifa);
           }
         };
 
@@ -273,7 +285,7 @@
           return this._div;
         };
 
-        search.update = function(properties) {
+        search.update = function(props) {
           this._div.innerHTML = '<h4>Search</h4>' + 
             '<input id="search" type="search" value="" placeholder="search" class="topcoat-search-input--large">';
         };
@@ -295,6 +307,10 @@
             return div;
         };
         legend.addTo(map);
+
+        $('#search').on('click', function(e) {
+          console.log(e);
+        });
 
         $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
         map.setView([-33.8600, 151.2111], 6);

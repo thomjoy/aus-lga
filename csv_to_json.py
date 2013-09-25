@@ -1,12 +1,17 @@
 import csv
 from itertools import izip
 import json
+import sys
 
-f = open( 'nt.csv', 'r' )
-jsonOut = open ('nt.json', 'w+')
+args = sys.argv[1:]
+
+
+
+f = open(args[0], 'r')
+jsonOut = open(args[1], 'w+')
 
 reader = csv.reader( f )
-keys = ( "id", "name", "2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","change % (2007-2012)","change no.","area","density" )
+keys = ( "lga_id", "lga_name", "population", "score", "national_rank", "national_decile", "national_percentile", "state", "state_rank", "state_decile", "state_percentile" )
 
 out = []
 for property in reader:
