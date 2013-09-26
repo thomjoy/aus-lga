@@ -16,6 +16,7 @@ body { padding: 0; margin: 0; }
 }
 .info h5 { margin: 0; margin-bottom: 8px; font-size: 14px; }
 .info p { line-height: 1.3em; color: #333; margin: 0; font-size: 12px; color: #444; }
+.info a { font-size: 11px; text-decoration: none; }
 
 .legend {
     line-height: 18px;
@@ -44,3 +45,24 @@ body { padding: 0; margin: 0; }
   font-size: 11px;
   fill: #666;
 }
+.seifa-score { font-size: 21px; color: #333; margin-bottom: 5px; }
+
+.hist { height: auto; width: 240px; }
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+.bar text {
+  fill: #000;
+  font-size: 11px;
+}
+.hist .axis path, .hist .axis line {
+  fill: none;
+  stroke: #999;
+  shape-rendering: crispEdges;
+}
+.tick text { 
+  font-size: 11px;
+  fill: #666;
+}
+.contains-value rect { fill: red; }
