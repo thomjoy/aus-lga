@@ -255,11 +255,18 @@
 
           this._div.innerHTML = '<h4>Australian LGA Population Density</h4>' + 
               (props ? 
-                '<h5>' + props.data.name + '</h5>' + 
+                '<h5>' + props.data.name + ' (' + props.seifa.state + ')</h5>' + 
                 '<p>Area: <strong>' + formatter(props.data.area) + 'km<sup>2</sup></strong></p>' +
                 '<p>Population (2012): <strong>' + formatter(props.data['2012']) + '</strong></p>' +
                 '<p>Population density: <strong>' + props.data.density + ' people per km<sup>2</sup></strong></p>' +
-                '<div class="graph"></div>'
+                '<div class="graph"></div>' +
+                '<p>SEIFA score: <strong>' + props.seifa.score + '</strong></p>' + 
+                '<p>National Rank: ' + props.seifa.national_rank + '</p>' +
+                '<p>National Decile: '  + props.seifa.national_decile + '</p>' +
+                '<p>National Percentage: '  + props.seifa.national_percentile + '</p>' +
+                '<p>State Rank: ' + props.seifa.state_rank + '</p>' +
+                '<p>State Decile: '  + props.seifa.state_decile + '</p>' +
+                '<p>State Percentage: '  + props.seifa.state_percentile + '</p>'
               : '<p>Hover over an LGA</p>');
 
           if( props ) {
