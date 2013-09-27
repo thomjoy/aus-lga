@@ -7,17 +7,22 @@ body { padding: 0; margin: 0; }
   background: white;
   background: rgba(255,255,255,0.9);
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  min-width: 280px;
+  min-width: 300px;
   height: auto;
 }
 .info h4, .search h4 {
   margin: 0 0 5px;
   color: #222;
 }
-.info h5 { margin: 0; margin-bottom: 8px; font-size: 14px; }
-.info p { line-height: 1.3em; color: #333; margin: 0; font-size: 12px; color: #444; }
-.info a { font-size: 11px; text-decoration: none; }
 
+.info .lga-name { margin: 0; margin-top: 10px; margin-bottom: 5px; font-size: 24px; color: #333; }
+.info .state { font-size: 14px; color: #999; font-weight: bold; display: inline-block; margin-bottom: 5px; }
+.info p { line-height: 1.3em; color: #333; margin: 0; font-size: 12px; color: #444; }
+.info a { font-size: 10px; text-decoration: none; }
+
+.info h6 { margin-top: 10px; margin-bottom: 4px; padding-top: 1px; border-top: 1px solid #ddd; font-size: 14px; color: #777; font-weight: bold; }
+.value { display: inline-block; margin-right: 3px; font-size: 21px; letter-spacing: -0.05em; color: #333; font-weight: bold; }
+.units { display: inline-block; font-size: 11px; color: #777; vertical-align: top; text-transform: uppercase; }
 .legend {
     line-height: 18px;
     color: #555;
@@ -46,6 +51,7 @@ body { padding: 0; margin: 0; }
   fill: #666;
 }
 
+.seifa-header { margin: 0; font-size: 18px; color: #777; }
 
 .seifa-container { 
   width: 100%;
@@ -57,7 +63,7 @@ body { padding: 0; margin: 0; }
   font-size: 52px;
   color: #333;
   margin-bottom: 5px;
-  margin-top: 15px;
+  margin-top: 20px;
   display: block;
   /*float: left;*/
   letter-spacing: -0.05em;
@@ -69,6 +75,13 @@ body { padding: 0; margin: 0; }
 
   float: left;
 }
+
+.rank-container { overflow: hidden; border-top: 1px solid #ddd; }
+.rank { width: 40%; float: left; line-height: 28px; padding: 4%; }
+.rank:first-child { border-right: 1px solid #ddd; }
+.rank .rank-value { display: inline-block; margin-right: 3px; font-size: 28px; letter-spacing: -0.05em; color: #333; font-weight: bold; }
+.rank .total-lgas { font-size: 12px; color: #666; vertical-align: bottom; }
+.rank .percentile { margin-top: 6px; font-size: 12px; color: #999; } 
 
 .hist .bar rect {
   fill: steelblue;

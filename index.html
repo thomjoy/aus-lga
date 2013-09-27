@@ -329,28 +329,64 @@
       };
 
       info.update = function(props) {
-        this._div.innerHTML = 
-            (props ? 
-              '<h5>' + props.data.name + ' (' + props.seifa.state + ')</h5>' + 
-              '<p>Area: <strong>' + formatter(props.data.area) + 'km<sup>2</sup></strong></p>' +
-              '<p>Population (2012): <strong>' + formatter(props.data['2012']) + '</strong></p>' +
-              '<p>Population density: <strong>' + props.data.density + ' people per km<sup>2</sup></strong></p>' +
-              
-              '<div class="graph"></div>' +
-              '<hr>' + 
-              '<h5>Socio-economic (SEIFA)</h5>' + 
-              '<div class="seifa-container">' + 
-              '<strong class="seifa-score">' + formatter(props.seifa.score) + '</strong>' + 
-              '<div class="hist"></div>' + 
-              '</div>' +
-              '<p>National Rank: ' + (numLGAs - parseInt(props.seifa.national_rank, 10)) + '</p>' +
-              '<p>National Percentage: '  + props.seifa.national_percentile + '</p>' +
-              '<p>State Rank: ' + props.seifa.state_rank  + '</p>' +
-              '<p>State Percentage: '  + props.seifa.state_percentile + '</p>' +
-              '<a target="_blank" href="http://en.wikipedia.org/wiki/SEIFA">More on SEIFA</a>'
-            : '<p>Hover over an LGA</p>');
 
-        if( props ) {
+        if( !props ) {
+          this._div.innerHTML = '<p>Hover over an LGA</p>';
+        }
+        else {
+          var numLGAInState = { 
+            'NSW': 154,
+            'QLD': 74,
+            'VIC': 79,
+            'WA': 142,
+            'SA': 64,
+            'NT': 21,
+            'TAS': 30
+          };
+
+          var lgaName = props.data.name.replace(/(\(*.\))/, '');
+
+          this._div.innerHTML = 
+            '<h5 class="lga-name">' + lgaName + '</h5>' + 
+            '<span class="state">' + props.seifa.state.toUpperCase() + '</span>' + 
+            
+            '<h6>Area</h6>' + 
+            '<span class="value">' + formatter(props.data.area) + '</span><span class="units">km<sup>2</sup></span>' +
+            
+            '<h6>2012 Population</h6>' +
+            '<span class="value">' + formatter(props.data['2012']) + '</span>' +
+            
+            '<h6>Population Density</h6>' + 
+            '<span class="value">' + props.data.density + ' </span><span class="units">people per km<sup>2</sup></span>' +
+
+            '<div class="graph"></div>' +
+            
+            '<hr>' + 
+
+            '<h5 class="seifa-header">Socio-economic (SEIFA)</h5>' + 
+            '<div class="seifa-container">' + 
+            '<strong class="seifa-score">' + formatter(props.seifa.score) + '</strong>' + 
+            '<div class="hist"></div>' + 
+            '</div>' +
+
+            '<div class="rank-container">' + 
+              '<div class="rank">' +
+                '<h4>National</h4>' + 
+                '<span class="rank-value">' + (numLGAs - parseInt(props.seifa.national_rank, 10)) + '</span>' +
+                '<span class="total-lgas"> /' + numLGAs + '</span>' +
+                '<div class="percentile">' + props.seifa.national_percentile + ' percentile</div>' +
+              '</div>' + 
+
+              '<div class="rank">' +
+                '<h4>State</h4>' + 
+                '<span class="rank-value">' + (numLGAInState[props.seifa.state.toUpperCase()] - parseInt(props.seifa.state_rank, 10)) + '</span>' +
+                '<span class="total-lgas"> /' + numLGAInState[props.seifa.state.toUpperCase()] + '</span>' +
+                '<div class="percentile">' + props.seifa.state_percentile + ' percentile</div>' +
+              '</div>' + 
+            '</div>' + 
+
+            '<a target="_blank" href="http://en.wikipedia.org/wiki/SEIFA">More on SEIFA</a>';
+
           var graphData = (function(obj) {
               var d = [];
               // get Years
