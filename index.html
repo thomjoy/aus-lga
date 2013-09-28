@@ -6,6 +6,7 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
   <link rel='stylesheet' href='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' />
+  <link rel='stylesheet' href='topcoat/css/topcoat-desktop-light.css' />
   <link rel='stylesheet' href='style.css' />
 
   <script src='//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
@@ -319,6 +320,54 @@
         }
       }).addTo(map);
 
+      function suffixNumber(number) {
+        var lastDigit;
+
+        if( typeof number != 'string' ) {
+          lastDigit = (function(n) {
+            var tmp = n.toString();
+            return +tmp[lastDigit.length-1];
+          })(number);
+        }
+        else {
+          lastDigit = number[number.length - 1];
+        }
+
+        if( +lastDigit === 1 ) {
+          suffix = 'st';
+        }
+        if( +lastDigit === 2 ) {
+          suffix = 'nd';
+        }
+        if( +lastDigit === 3 ) {
+          suffix = 'rd';
+        }
+        if( _.contains([0,4,5,6,7,8,9], +lastDigit) ) {
+          suffix = 'th';
+        }
+
+        return number + '<sup>' + suffix + '</sup>';
+      }
+
+      // --- Map control
+      var mapControl = L.control();
+      mapControl.onAdd = function(map) {
+        this._div = L.DomUtil.create('div', 'map-control');
+        this.update();
+        return this._div;
+      };
+      mapControl.update = function(props) {
+        this._div.innerHTML =
+          '<div class="topcoat-button-bar">' + 
+            '<div class="topcoat-button-bar__item">' +
+              '<button class="topcoat-button-bar__button">Population Density</button>' +
+            '</div>' +
+            '<div class="topcoat-button-bar__item"> ' +
+              '<button class="topcoat-button-bar__button">SEIFA Score</button>' +
+            '</div>' +
+          '</div>';
+      };
+      mapControl.addTo(map);
 
       // -- Add the Info box
       var info = L.control();
@@ -374,14 +423,14 @@
                 '<h4>National</h4>' + 
                 '<span class="rank-value">' + (numLGAs - parseInt(props.seifa.national_rank, 10)) + '</span>' +
                 '<span class="total-lgas"> /' + numLGAs + '</span>' +
-                '<div class="percentile">' + props.seifa.national_percentile + ' percentile</div>' +
+                '<div class="percentile">' + suffixNumber(props.seifa.national_percentile) + ' percentile</div>' +
               '</div>' + 
 
               '<div class="rank">' +
                 '<h4>State</h4>' + 
                 '<span class="rank-value">' + (numLGAInState[props.seifa.state.toUpperCase()] - parseInt(props.seifa.state_rank, 10)) + '</span>' +
                 '<span class="total-lgas"> /' + numLGAInState[props.seifa.state.toUpperCase()] + '</span>' +
-                '<div class="percentile">' + props.seifa.state_percentile + ' percentile</div>' +
+                '<div class="percentile">' + suffixNumber(props.seifa.state_percentile) + ' percentile</div>' +
               '</div>' + 
             '</div>' + 
 
@@ -405,19 +454,6 @@
         }
       };
       info.addTo(map);
-
-      // --- Search control
-      var search = L.control();
-      search.onAdd = function(map) {
-        this._div = L.DomUtil.create('div', 'search');
-        this.update();
-        return this._div;
-      };
-      search.update = function(props) {
-        this._div.innerHTML = '<h4>Search</h4>' + 
-          '<input id="search" type="search" value="" placeholder="search" class="topcoat-search-input--large">';
-      };
-      search.addTo(map);
 
       // --- Legend control
       var legend = L.control();
