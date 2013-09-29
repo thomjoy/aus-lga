@@ -174,29 +174,39 @@ function suffixNumber(number) {
 function getColor(d) {
 
   // create a d3.scale here?
-  return d > 1000 ? '#800026' :
-         d > 500  ? '#BD0026' :
-         d > 200  ? '#E31A1C' :
-         d > 100  ? '#FC4E2A' :
+  return d > 90 ? '#800026' :
+         d > 80  ? '#BD0026' :
+         d > 70  ? '#E31A1C' :
+         d > 60  ? '#FC4E2A' :
          d > 50   ? '#FD8D3C' :
-         d > 20   ? '#FEB24C' :
-         d > 10   ? '#FED976' :
-                    '#FFEDA0';
+         d > 40   ? '#FEB24C' :
+         d > 30   ? '#FED976' :
+         d > 20 ? '#FFEDA0' :
+         d > 10 ? '#FFFFB0' :
+                  '#FFFFCC';
 }
 
 function styleFeature(feature, type) {
-  var metric;
+  var metric, scale;
   if( type === 'population' ) {
     metric = feature.properties.data && feature.properties.data.density ? 
         feature.properties.data.density : 0;
+    scale = d3.scale.linear()
+          .domain([0, 1000])
+          .range([0, 100]);
+
   }
   if( type === 'seifa' ) {
     metric = feature.properties.seifa && feature.properties.seifa.score ? 
         feature.properties.seifa.score : 0;
+
+    scale = d3.scale.linear()
+            .domain([500, 1200])
+            .range([0, 100]);
   }
 
   return {
-      fillColor: getColor(metric),
+      fillColor: getColor(scale(metric)),
       weight: 1,
       opacity: 0.7,
       color: '#888',
