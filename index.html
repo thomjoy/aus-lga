@@ -21,14 +21,15 @@
   <script>
     var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/22677/256/{z}/{x}/{y}.png'
         cloudmadeAttribution = 'Map data &copy; 2013 OpenStreetMap contributors, Imagery &copy; 2013 CloudMade',
-        cloudmade = L.tileLayer(cloudmadeUrl, { 
-          maxZoom: 18,
-          attribution: cloudmadeAttribution, 
-          styleId: 22677
-          }),
+        layerOptions = { maxZoom: 18, attribution: cloudmadeAttribution, styleId: 22677 },
+        layer = L.tileLayer(cloudmadeUrl, layerOptions),
+        map = L.map('map',{
+          zoom: 6,
+          layers: [layer]
+        }),
+        layerGroup = new L.LayerGroup(),
+        geoJSONLayer = L.geoJson(),
         formatter = d3.format("0,000"),
-        map = L.map('map', {zoom: 6, layers: [cloudmade]}),
-        states = ['nsw', 'vic', 'qld', 'sa', 'wa', 'tas', 'nt'],
         geoData = $.getJSON('AUS_LGA.json'),
         nswData = $.getJSON('nsw.json'),
         vicData = $.getJSON('vic.json'),
@@ -131,7 +132,7 @@
               '<button data-show="population" class="topcoat-button-bar__button map-data-toggle">Population Density</button>' +
             '</div>' +
             '<div class="topcoat-button-bar__item"> ' +
-              '<button data-show="sefia" class="topcoat-button-bar__button map-data-toggle">SEIFA Score</button>' +
+              '<button data-show="seifa" class="topcoat-button-bar__button map-data-toggle">SEIFA Score</button>' +
             '</div>' +
           '</div>';
       };
@@ -139,22 +140,8 @@
 
       // @todo: 
       // Create two layers upfront and switch between them
-      function toggleMap(data) {
-        // -- Add GeoJSON layer to map
-        /*L.geoJson(stateJSON[0], {
-            style: {
-              fillColor: 'transparent',
-              fillOpacity: 0,
-              color: '#999',
-              opacity: 1,
-              width: 0.5,
-              weight: 0.5
-            }
-          }).addTo(map);
-        */
-
-        L.geoJson(geoJSON[0], {
-          //style: styleFeature,
+      function toggleGeoJSONLayer(data) {
+        var geoJsonLayer = L.geoJson(geoJSON[0], {
           onEachFeature: function(feature, layer) {
             layer.setStyle(styleFeature(feature, data));
             layer.on({
@@ -173,17 +160,21 @@
               mouseout: function(evt) {
                 //info.update();
               }
-            });
+            }); 
           }
-        }).addTo(map);
+        });
+
+        layerGroup.clearLayers();
+        layerGroup.addLayer(geoJsonLayer);
       }
 
-      toggleMap('population');
+      layerGroup.addTo(map);
+      toggleGeoJSONLayer('population');
 
       // Rerender some geojson data
       $('.map-data-toggle').on('click', function(evt) {
-        var newLayerData = $(evt.currentTarget).data('data-show');
-        toggleMap(newLayerData)
+        var newLayerData = $(evt.currentTarget).attr('data-show');
+        toggleGeoJSONLayer(newLayerData)
       });
 
       // -- Add the Main Info box

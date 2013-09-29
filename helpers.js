@@ -172,6 +172,8 @@ function suffixNumber(number) {
 }
 
 function getColor(d) {
+
+  // create a d3.scale here?
   return d > 1000 ? '#800026' :
          d > 500  ? '#BD0026' :
          d > 200  ? '#E31A1C' :
@@ -180,10 +182,9 @@ function getColor(d) {
          d > 20   ? '#FEB24C' :
          d > 10   ? '#FED976' :
                     '#FFEDA0';
-};
+}
 
 function styleFeature(feature, type) {
-
   var metric;
   if( type === 'population' ) {
     metric = feature.properties.data && feature.properties.data.density ? 
