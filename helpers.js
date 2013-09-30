@@ -65,7 +65,7 @@ function buildHistogram(opts, highlightScore) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
-};
+}
 
 function buildGraph(opts) {
   var data = opts.data,
