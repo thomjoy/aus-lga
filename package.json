@@ -1,0 +1,25 @@
+{
+  "name": "aus-lga",
+  "version": "0.0.0",
+  "description": "aus-lga =======",
+  "main": "launch.js",
+  "dependencies": {
+    "util": "~0.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thomjoy/aus-lga.git"
+  },
+  "author": "Thom Joy",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "c6153426f5a03940c78cb3c69c923795e4072830",
+  "bugs": {
+    "url": "https://github.com/thomjoy/aus-lga/issues"
+  }
+}
