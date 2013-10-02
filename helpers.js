@@ -33,7 +33,7 @@ function buildHistogram(opts, highlightScore) {
       .scale(x)
       .ticks(4)
       .tickSize(4)
-      .orient("bottom")
+      .orient("bottom");
 
   var svg = d3.select(".hist")
       .append("svg")
@@ -58,7 +58,7 @@ function buildHistogram(opts, highlightScore) {
       .attr("dy", ".55em")
       .attr("y", 6)
       //.attr("x", x(data[0].dx) / 2)
-      .attr("text-anchor", "middle")
+      .attr("text-anchor", "middle");
       //.text(function(d) { return d.y; });
 
   svg.append("g")
@@ -70,7 +70,7 @@ function buildHistogram(opts, highlightScore) {
 function buildGraph(opts) {
   var data = opts.data,
       el = opts.el,
-      margin = {top: 30, right: 45, bottom: 30, left: 45}, 
+      margin = {top: 30, right: 45, bottom: 30, left: 45},
       width = 280 - margin.left - margin.right,
       height = 120 - margin.top - margin.bottom;
 
@@ -83,7 +83,7 @@ function buildGraph(opts) {
             .domain([data[0].year, data[data.length-1].year])
             .range([0, width]);
       y = d3.scale.linear()
-            .domain([d3.min(data, function(d) { return +d.pop }), d3.max(data, function(d) { return +d.pop; })])
+            .domain([d3.min(data, function(d) { return +d.pop; }), d3.max(data, function(d) { return +d.pop; })])
             .range([height, 0]),
 
       xAxis = d3.svg.axis().scale(x)
@@ -104,7 +104,7 @@ function buildGraph(opts) {
         .y1(function(d) { return y(d.pop); }),
 
       valueline = d3.svg.line()
-        .x(function(d) { return x(d.year); }) 
+        .x(function(d) { return x(d.year); })
         .y(function(d) { return y(d.pop); }),
 
       svg = d3.select('.graph')
@@ -189,16 +189,16 @@ function getColor(d) {
 function styleFeature(feature, type) {
   var metric, scale;
   if( type === 'population' ) {
-    metric = feature.properties.data && feature.properties.data.density ? 
-        feature.properties.data.density : 0;
+    metric = feature.properties.population_data && feature.properties.population_data.density ?
+        feature.properties.population_data.density : 0;
     scale = d3.scale.linear()
           .domain([0, 1000])
           .range([0, 100]);
 
   }
   if( type === 'seifa' ) {
-    metric = feature.properties.seifa && feature.properties.seifa.score ? 
-        feature.properties.seifa.score : 0;
+    metric = feature.properties.seifa_data && feature.properties.seifa_data.score ?
+        feature.properties.seifa_data.score : 0;
 
     scale = d3.scale.linear()
             .domain([500, 1200])

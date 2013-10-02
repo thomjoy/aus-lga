@@ -4,9 +4,6 @@ import json
 import sys
 
 args = sys.argv[1:]
-
-
-
 f = open(args[0], 'r')
 jsonOut = open(args[1], 'w+')
 
