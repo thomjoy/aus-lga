@@ -76,12 +76,7 @@
             layer.setStyle(styleFeature(feature, data));
             layer.on({
               click: function() {
-                layer.setStyle({
-                  color: '#fff',
-                  opacity: 1,
-                  dashArray: '3',
-                  fillOpacity: 1
-                });
+                
               },
               mouseover: function(evt) {
                 var feature = evt.layer && evt.layer.feature;
@@ -130,31 +125,40 @@
           'TAS': 30
         };
 
+        // shorthand 
+        var ind = props.indigenous_data;
+        var seifa = props.seifa_data;
+        var pop = props.population_data;
+        var state = props.state_data;
+        var lga = props.lga_data;
+        var indPercentage = (ind && ind.indigenous_total_percentage) || 0; 
+
+        // yikes
         this._div.innerHTML = 
-          '<h5 class="lga-name">' + props.lga_data.name + '</h5>' + 
-          '<span class="state">' + props.state_data.abbr + '</span>' + 
+          '<h5 class="lga-name">' + lga.name + '</h5>' + 
+          '<span class="state">' + state.abbr + '</span>' + 
           '<div>' + 
-          '<span>' + props.indigenous_data.indigenous_total_percentage + '%</span>' +
+          '<span>' + indPercentage + '%</span>' +
           '</div>' +
           '<!--<h5 class="seifa-header">Socio-economic (SEIFA)</h5>-->' + 
           '<div class="seifa-container">' + 
-          '<strong class="seifa-score">' + formatter(props.seifa_data.score) + '</strong>' + 
+          '<strong class="seifa-score">' + formatter(seifa.score) + '</strong>' + 
           '<div class="hist"></div>' + 
           '</div>' +
           '<a target="_blank" href="http://en.wikipedia.org/wiki/SEIFA">More on SEIFA</a>' +
           '<div class="rank-container">' + 
             '<div class="rank">' +
               '<h4>National</h4>' + 
-              '<span class="rank-value">' + (numLGAs - parseInt(props.seifa_data.national_rank, 10)) + '</span>' +
+              '<span class="rank-value">' + (numLGAs - parseInt(seifa.national_rank, 10)) + '</span>' +
               '<span class="total-lgas"> /' + numLGAs + '</span>' +
-              '<div class="percentile">' + suffixNumber(props.seifa_data.national_percentile) + ' percentile</div>' +
+              '<div class="percentile">' + suffixNumber(seifa.national_percentile) + ' percentile</div>' +
             '</div>' + 
 
             '<div class="rank">' +
               '<h4>State</h4>' + 
-              '<span class="rank-value">' + (numLGAInState[props.seifa_data.state.toUpperCase()] - parseInt(props.seifa_data.state_rank, 10)) + '</span>' +
-              '<span class="total-lgas"> /' + numLGAInState[props.state_data.abbr] + '</span>' +
-              '<div class="percentile">' + suffixNumber(props.seifa_data.state_percentile) + ' percentile</div>' +
+              '<span class="rank-value">' + (numLGAInState[state.abbr] - parseInt(seifa.state_rank, 10)) + '</span>' +
+              '<span class="total-lgas"> /' + numLGAInState[state.abbr] + '</span>' +
+              '<div class="percentile">' + suffixNumber(seifa.state_percentile) + ' percentile</div>' +
             '</div>' + 
           '</div>' + 
 
@@ -163,13 +167,13 @@
           '<div class="graph"></div>' +
 
           '<h6>Area</h6>' + 
-          '<span class="value">' + formatter(props.population_data.area) + '</span><span class="units">km<sup>2</sup></span>' +
+          '<span class="value">' + formatter(pop.area) + '</span><span class="units">km<sup>2</sup></span>' +
           
           '<h6>2012 Population</h6>' +
-          '<span class="value">' + formatter(props.population_data['2012']) + '</span>' +
+          '<span class="value">' + formatter(pop['2012']) + '</span>' +
           
           '<h6>Population Density</h6>' + 
-          '<span class="value">' + props.population_data.density + ' </span><span class="units">people per km<sup>2</sup></span>';
+          '<span class="value">' + pop.density + ' </span><span class="units">people per km<sup>2</sup></span>';
 
         var graphData = (function(obj) {
             var d = [];
@@ -191,6 +195,7 @@
       info.addTo(map);
 
       // --- Legend control
+      /*
       var legend = L.control();
       legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend'),
@@ -200,12 +205,13 @@
           // loop through our density intervals and generate a label with a colored square for each interval
           for (var i = 0; i < grades.length; i++) {
               div.innerHTML +=
-                  '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                  '<i style="background:' + getColor(grades[i] + 1, 'population') + '"></i> ' +
                   grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
           }
           return div;
       };
       legend.addTo(map);
+      */
 
       $('#map').css('height', function() { return document.body.clientHeight || '800px'; });
       map.setView([-33.8600, 151.2111], 6);

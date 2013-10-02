@@ -171,29 +171,39 @@ function suffixNumber(number) {
   return number + '<sup>' + suffix + '</sup>';
 }
 
-function getColor(d) {
-  console.log(d);
-  // create a d3.scale here?
-  return d > 90 ? '#800026' :
-         d > 80  ? '#BD0026' :
-         d > 70  ? '#E31A1C' :
-         d > 60  ? '#FC4E2A' :
-         d > 50   ? '#FD8D3C' :
-         d > 40   ? '#FEB24C' :
-         d > 30   ? '#FED976' :
-         d > 20 ? '#FFEDA0' :
-         d > 10 ? '#FFFFB0' :
-                  '#FFFFCC';
+function getColor(d, scheme) {
+  
+  // light (lower) to dark (higher)
+  // http://bl.ocks.org/mbostock/5577023
+  var schemes = {
+    green:  ["#ffffe5","#f7fcb9","#e8edaa", "#d9f0a3","#addd8e","#78c679","#41ab5d","#238443","#006837","#004529", "#002d1a"],
+    orange: ["#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#fce794", "#e31a1c","#bd0026","#800026", "#68001d"],
+    blue:   ["#f7fbff","#e6eff7", "#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b", "#051e42"]
+  };
+
+  var colorScheme = schemes[scheme];
+  return d > 9 ? colorScheme[9] :
+         d > 8 ? colorScheme[8] :
+         d > 7 ? colorScheme[7] :
+         d > 6 ? colorScheme[6] :
+         d > 5 ? colorScheme[5] :
+         d > 4 ? colorScheme[4] :
+         d > 3 ? colorScheme[3] :
+         d > 2 ? colorScheme[2] :
+         d > 1 ? colorScheme[1] :
+                 colorScheme[0];
 }
 
 function styleFeature(feature, type) {
-  var metric, scale;
+  var metric, scale, scheme;
   if( type === 'population' ) {
     metric = feature.properties.population_data && feature.properties.population_data.density ?
         feature.properties.population_data.density : 0;
     scale = d3.scale.linear()
           .domain([0, 1000])
-          .range([0, 100]);
+          .range([0, 10]);
+
+    scheme = 'blue';
 
   }
   if( type === 'seifa' ) {
@@ -202,24 +212,27 @@ function styleFeature(feature, type) {
 
     scale = d3.scale.linear()
             .domain([500, 1200])
-            .range([0, 100]);
-  }
+            .range([0, 10]);
 
+    scheme = 'orange';
+  }
   if( type === 'indigenous' ) {
     metric = feature.properties.indigenous_data && feature.properties.indigenous_data.indigenous_total_percentage ?
         feature.properties.indigenous_data.indigenous_total_percentage : 0;
 
     scale = d3.scale.linear()
             .domain([0, 30])
-            .range([0, 100]);
+            .range([0, 10]);
+
+    scheme = 'green';
   }
 
   return {
-      fillColor: getColor(scale(metric)),
-      weight: 1,
-      opacity: 0.7,
-      color: '#888',
-      dashArray: '3',
+      fillColor: getColor(scale(metric), scheme),
+      weight: 0.5,
+      opacity: 0.3,
+      color: '#fff',
+      //dashArray: '3',
       fillOpacity: 0.7
   };
 };
