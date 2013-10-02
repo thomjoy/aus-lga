@@ -172,7 +172,7 @@ function suffixNumber(number) {
 }
 
 function getColor(d) {
-
+  console.log(d);
   // create a d3.scale here?
   return d > 90 ? '#800026' :
          d > 80  ? '#BD0026' :
@@ -202,6 +202,15 @@ function styleFeature(feature, type) {
 
     scale = d3.scale.linear()
             .domain([500, 1200])
+            .range([0, 100]);
+  }
+
+  if( type === 'indigenous' ) {
+    metric = feature.properties.indigenous_data && feature.properties.indigenous_data.indigenous_total_percentage ?
+        feature.properties.indigenous_data.indigenous_total_percentage : 0;
+
+    scale = d3.scale.linear()
+            .domain([0, 30])
             .range([0, 100]);
   }
 

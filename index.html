@@ -55,11 +55,14 @@
       mapControl.update = function(props) {
         this._div.innerHTML =
           '<div class="topcoat-button-bar">' + 
+            '<div class="topcoat-button-bar__item"> ' +
+              '<button data-show="seifa" class="topcoat-button-bar__button map-data-toggle">SEIFA Score</button>' +
+            '</div>' +
             '<div class="topcoat-button-bar__item">' +
               '<button data-show="population" class="topcoat-button-bar__button map-data-toggle">Population Density</button>' +
             '</div>' +
             '<div class="topcoat-button-bar__item"> ' +
-              '<button data-show="seifa" class="topcoat-button-bar__button map-data-toggle">SEIFA Score</button>' +
+              '<button data-show="indigenous" class="topcoat-button-bar__button map-data-toggle">Indigenous Population</button>' +
             '</div>' +
           '</div>';
       };
@@ -96,11 +99,12 @@
       }
 
       layerGroup.addTo(map);
-      toggleGeoJSONLayer('population');
+      toggleGeoJSONLayer('seifa');
 
       // Rerender some geojson data
       $('.map-data-toggle').on('click', function(evt) {
         var newLayerData = $(evt.currentTarget).attr('data-show');
+        console.log('Switching to:' + newLayerData);
         toggleGeoJSONLayer(newLayerData)
       });
 
@@ -133,26 +137,13 @@
           this._div.innerHTML = 
             '<h5 class="lga-name">' + props.lga_data.name + '</h5>' + 
             '<span class="state">' + props.state_data.abbr + '</span>' + 
-            
-            '<h6>Area</h6>' + 
-            '<span class="value">' + formatter(props.population_data.area) + '</span><span class="units">km<sup>2</sup></span>' +
-            
-            '<h6>2012 Population</h6>' +
-            '<span class="value">' + formatter(props.population_data['2012']) + '</span>' +
-            
-            '<h6>Population Density</h6>' + 
-            '<span class="value">' + props.population_data.density + ' </span><span class="units">people per km<sup>2</sup></span>' +
 
-            '<div class="graph"></div>' +
-            
-            '<hr>' + 
-
-            '<h5 class="seifa-header">Socio-economic (SEIFA)</h5>' + 
+            '<!--<h5 class="seifa-header">Socio-economic (SEIFA)</h5>-->' + 
             '<div class="seifa-container">' + 
             '<strong class="seifa-score">' + formatter(props.seifa_data.score) + '</strong>' + 
             '<div class="hist"></div>' + 
             '</div>' +
-
+            '<a target="_blank" href="http://en.wikipedia.org/wiki/SEIFA">More on SEIFA</a>' +
             '<div class="rank-container">' + 
               '<div class="rank">' +
                 '<h4>National</h4>' + 
@@ -169,7 +160,18 @@
               '</div>' + 
             '</div>' + 
 
-            '<a target="_blank" href="http://en.wikipedia.org/wiki/SEIFA">More on SEIFA</a>';
+            '<hr>' + 
+            
+            '<div class="graph"></div>' +
+
+            '<h6>Area</h6>' + 
+            '<span class="value">' + formatter(props.population_data.area) + '</span><span class="units">km<sup>2</sup></span>' +
+            
+            '<h6>2012 Population</h6>' +
+            '<span class="value">' + formatter(props.population_data['2012']) + '</span>' +
+            
+            '<h6>Population Density</h6>' + 
+            '<span class="value">' + props.population_data.density + ' </span><span class="units">people per km<sup>2</sup></span>';
 
           var graphData = (function(obj) {
               var d = [];
