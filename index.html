@@ -31,6 +31,7 @@
         geoJSONLayer = L.geoJson(),
         formatter = d3.format("0,000"),
         geoData = $.getJSON('AUS_LGA.json'),
+
         nswData = $.getJSON('nsw.json'),
         vicData = $.getJSON('vic.json'),
         qldData = $.getJSON('qld.json'),
@@ -38,17 +39,31 @@
         waData = $.getJSON('wa.json'),
         tasData = $.getJSON('tas.json'),
         ntData = $.getJSON('nt.json'),
-        stateData = $.getJSON('states.json'),
-        seifaData = $.getJSON('lga_seifa.json');
 
-    $.when( geoData, nswData, vicData, qldData, saData, waData, tasData, ntData, stateData, seifaData )
-    .done( function( geoJSON, nswJSON, vicJSON, qldJSON, saJSON, waJSON, tasJSON, ntJSON, stateJSON, seifaJSON ) {
+        stateData = $.getJSON('states.json'), // not currently used
+        seifaData = $.getJSON('lga_seifa.json'),
+
+        nswIndigenousData = $.getJSON('nsw_a_tsi.json');
+
+    $.when( geoData, nswData, vicData, qldData, saData, waData, tasData, ntData, stateData, seifaData, nswIndigenousData )
+    .done( function( geoJSON, nswJSON, vicJSON, qldJSON, saJSON, waJSON, tasJSON, ntJSON, stateJSON, seifaJSON, nswIndigenousJSON ) {
 
       // horrible
       nswJSON[0].forEach(function(l) { 
         geoJSON[0].features.forEach(function(g) {
           if( g.properties.LGA_CODE11 == l.id ) {
             g.properties.data = l;
+          }
+        });
+      });
+
+      geoJSON[0].features.forEach(function(g) {
+        nswIndigenousJSON[0].forEach(function(d) {
+          console.log(d);
+          console.log(g);
+          if( g.LGA_NAME11 == d.lga_name ) {
+            g.properties.indigenous = d;
+
           }
         });
       });
