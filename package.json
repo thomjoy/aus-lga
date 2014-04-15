@@ -6,7 +6,11 @@
   "dependencies": {
     "util": "~0.4.9"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "connect": "~2.14.3",
+    "express": "~3.5.1",
+    "underscore": "~1.6.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
