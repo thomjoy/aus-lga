@@ -4,6 +4,6 @@ var api = require('api'),
 
 var port = 7777;
 connect.createServer(connect.static(__dirname)).listen(port);
-util.puts('Static Server listening on :' + port);
+console.log('Static Server listening on :' + port);
 
 api.listen(8889);
